@@ -24,11 +24,21 @@
     }
     arregloTareas.push(nuevaTarea)
     localStorage.setItem('items', JSON.stringify(arregloTareas))
+    contadorPendientes();
     location.reload()
     
   }
   // Codigo DOM #2
-  
+  function contadorPendientes(){
+    const pendingCount = arregloTareas.filter(task => !task.complete).length;
+    const countElement = document.querySelector('.todo-count strong');
+    countElement.textContent = pendingCount;
+  }
+
+  window.addEventListener('load', () => {
+    contadorPendientes();
+  })
+
   // Codigo DOM #3
   
   // Codigo DOM #4
