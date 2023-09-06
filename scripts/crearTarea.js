@@ -1,17 +1,18 @@
 
   // Codigo DOM #1
+  
   let arregloTareas = localStorage.getItem('items')
   ? JSON.parse(localStorage.getItem('items'))
   : []
    document.querySelector('.new-todo').addEventListener('keyup', (event) => {
     if (
       event.keyCode === 13 &&
-      document.querySelector('.new-todo').value.length > 0
+      document.querySelector('.new-todo').value.length > 0 &&
+      document.querySelector('.new-todo').value != null
     ) {
       const nuevaTarea = document.querySelector('.new-todo')
       crearTarea(nuevaTarea)    
-    }
-    
+    } 
   })
   
   function crearTarea(nuevaTarea) {
@@ -38,6 +39,7 @@
     contadorPendientes();
   })
   editarTarea()
+  activateCheckboxListenershipCheck()
   
   // Codigo DOM #3
   
@@ -48,15 +50,15 @@
   // Codigo DOM #6
   
   //El sistema debe permitir EDITAR o MODIFICAR una tarea.
-  function editarTarea(){
+ function editarTarea(){
   document.querySelector('.todo-list').addEventListener('click', (event) => {
-    if (event.target.classList.contains('editBtn')){ 
+    if (event.target.classList.contains('editBtn')){
       activarEdit()
       activateSaveListeners()
       activateCancelListeners()
     }
   })
- };
+};
 const activarEdit = function() {
   const editarBtn = document.querySelectorAll('.editBtn')
   const controladorActualizacion = document.querySelectorAll('.update-controller')
@@ -67,16 +69,15 @@ const activarEdit = function() {
   const seleccionarCategoria = document.querySelectorAll(
     '.edit-controller select'
   )[1]
+  
+  for (let i = 0; i < editarBtn.length; i++) {
+    controladorActualizacion[i].style.display = 'block';
+    input[i].disabled = false;
 
-  editarBtn.forEach((eb, i) => {
-    eb.addEventListener('click', () => {
-      controladorActualizacion[i].style.display = 'block'
-      input[i].disabled = false
-
-      seleccionarPrioridad.value = arregloTareas[i].priority
-      seleccionarCategoria.value = arregloTareas[i].category
-    })
-  })
+    seleccionarPrioridad.value = arregloTareas[i].priority;
+    seleccionarCategoria.value = arregloTareas[i].category;
+  
+}
 
   const prioridad = document.querySelectorAll('#priority')
   prioridad.forEach((s, i) => {
@@ -153,6 +154,26 @@ function obtenerIndiceTarea(taskContainer) {
   //El sistema debe permitir AGREGAR una o varias items tarea.
   
   //El sistema deber permitir MARCAR una tarea como completada
+  function activateCheckboxListenershipCheck() {
+    const checkboxes = document.querySelectorAll('.toggle');
+    checkboxes.forEach((ch, i) => {
+      ch.addEventListener('click', () => {
+        arregloTareas[i].complete = ch.checked;
+        localStorage.setItem('items', JSON.stringify(arregloTareas));
+        contadorPendientes();
+      });
+      ch.addEventListener('click', () => {
+        arregloTareas[i].dontComplete = ch.unchecked;
+        localStorage.setItem('items', JSON.stringify(arregloTareas));
+        contadorPendientes();
+      });
+    });
+  }
+  
+  window.addEventListener('load', () => {
+    contadorPendientes();
+    activateCheckboxListenershipCheck(); // Llamado de la función después de cargar la página
+  });
   
   //El sistema debe permitir dar diferentes PRIORIDADES a las items
   //EJEMPLO:
@@ -163,6 +184,7 @@ function obtenerIndiceTarea(taskContainer) {
   //EJEMPLO:
   
   /*Categorías disponibles: PENDIENTE, COMPLETADO o TODASE.T.C */
+  
   
   //Recordar llamar las funciones displayItems() y displayFooter() para mostrar
   //las items en pantalla
