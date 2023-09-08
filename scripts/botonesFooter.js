@@ -24,3 +24,12 @@ function showPendientes() {
     });
   }
   
+
+  // Función para mostrar todas las tareas
+function showAll() {
+    const tasks = document.querySelectorAll('.item');
+    tasks.forEach((element) => {
+      element.style.display = 'block';
+    });
+  }
+  
